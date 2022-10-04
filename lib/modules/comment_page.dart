@@ -29,7 +29,8 @@ class CommentPage extends StatelessWidget
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context,index){
-                      return buildComment(context,SocialCubit.get(context).commentsList[num]);
+                      print(SocialCubit.get(context).commentsList[num][0]);
+                      return buildComment(context,SocialCubit.get(context).commentsList[num][index]);
                     },
                     separatorBuilder: (context,index)=>const SizedBox(height: 15.0,),
                     itemCount:SocialCubit.get(context).commentsList[num].length,
@@ -73,11 +74,11 @@ class CommentPage extends StatelessWidget
     );
   }
 
-  Widget buildComment(context,List<Map<String,dynamic>> comment)=>Container(
+  Widget buildComment(context,Map<String,dynamic> comment)=>Container(
     child:Row(
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage('${comment[num]['user']['image']}'),
+          backgroundImage: NetworkImage('${comment['user']['image']}'),
           radius: 25.0,
         ),
         const SizedBox(
@@ -88,7 +89,7 @@ class CommentPage extends StatelessWidget
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${comment[num]['user']['name']}',
+                '${comment['user']['name']}',
                 style: const TextStyle(
                   fontWeight:FontWeight.w800,
                   fontSize: 16.0,
@@ -96,7 +97,7 @@ class CommentPage extends StatelessWidget
                 ),
               ),
               Text(
-                '${comment[num]['comment']}',
+                '${comment['comment']}',
                 style: const TextStyle(
                   fontSize: 13.0,
                   fontWeight:FontWeight.w300,

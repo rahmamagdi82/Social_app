@@ -19,7 +19,7 @@ class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(InitialState());
   static SocialCubit get(context) => BlocProvider.of(context);
 
-  List screens = [FeedsScreen(), ChatsScreen(), UsersScreen(), SettingScreen()];
+  List screens = [const FeedsScreen(), const ChatsScreen(), const UsersScreen(), const SettingScreen()];
   List titles = [
     'Home',
     'Chats',
@@ -237,6 +237,7 @@ emit(UploadPostSuccessState());
     postId=[];
     likesInPost=[];
     commentsInPost=[];
+    List<QuerySnapshot> listOfComments=[];
     emit(GetPostLoadingState());
     FirebaseFirestore.instance.collection('posts').get().then((value){
       value.docs.forEach((element) {
@@ -247,8 +248,9 @@ emit(UploadPostSuccessState());
                 posts.add(PostModel.fromJson(element.data()));
                 likesInPost.add(likeValue.docs.length);
                 commentsInPost.add(commentValue.docs.length);
-                getComments(commentValue);
-               });
+                listOfComments.add(commentValue);
+                getComments(listOfComments,value.docs.length);
+              });
         }).catchError((error){
               print(error.toString());
             });
@@ -258,47 +260,34 @@ emit(UploadPostSuccessState());
       print(error.toString());
       emit(GetPostErrorState(error));
     });
+    //getComments(listOfComments);
   }
 
   List<List<Map<String,dynamic>>> commentsList=[];
-  int i=-1;
-  int j=0;
   void getComments(
-      QuerySnapshot commentValue,
-  ){
-    j=0;
-    emit(GetCommentsLoadingState());
-    if(commentValue.docs.isEmpty){
-      i++;
-      print('no comments');
-    }
-    else {
-      if (j < commentValue.docs.length){
-      commentValue.docs.forEach ( (element) {
-        FirebaseFirestore.instance.collection('users').doc(element.id)
-            .get()
-            .then((value) {
-          commentsList[i].add({
-            'comment': element.get('comment'),
-            'user': {
-              'name': value.data()!['name'],
-              'image': value.data()!['image']
-            },
+     List<QuerySnapshot> commentValueList,
+      int length,
+  ) {
+    if (commentValueList.length == length){
+      for (int i = 0; i < commentValueList.length; i++) {
+        commentValueList[i].docs.forEach((comment) {
+          FirebaseFirestore.instance.collection('users').doc(comment.id)
+              .get()
+              .then((value) {
+            commentsList[i].add({
+              'comment': comment.get('comment'),
+              'user': {
+                'name': value.get('name'),
+                'image': value.get('image')
+              },
+            });
+            emit(GetCommentsSuccessState());
+          }).catchError((error) {
+            print(error.toString());
+            emit(GetCommentsErrorState(error.toString()));
           });
-          emit(GetCommentsSuccessState());
-          print(commentsList);
-        }).catchError((error) {
-          print(error.toString());
-          emit(GetCommentsErrorState(error.toString()));
         });
-        j++;
-        print(j);
-      });
-    }else if (j == commentValue.docs.length) {
-    i++;
-    print(true);
-    print(i);
-    }
+      }
   }
   }
 

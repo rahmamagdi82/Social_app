@@ -9,6 +9,8 @@ import 'package:social_app/shared/components/cubit/states.dart';
 
 class ChatsScreen extends StatelessWidget
 {
+  const ChatsScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit,SocialStates>(
@@ -16,13 +18,13 @@ class ChatsScreen extends StatelessWidget
           condition: SocialCubit.get(context).chats.length > 0,
           builder: (BuildContext context) {
             return ListView.separated(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context,index)=>buildChat(SocialCubit.get(context).chats[index],context),
               separatorBuilder: (context,index)=>myDivider(),
               itemCount: SocialCubit.get(context).chats.length,
             );
           },
-         fallback: (context)=>Center(child: Text('You don\'t have any chats yet' )),
+         fallback: (context)=>const Center(child: Text('You don\'t have any chats yet' )),
         ),
         listener: (context,state){}
     );
@@ -47,7 +49,7 @@ class ChatsScreen extends StatelessWidget
           ),
           Text(
             '${model.name}',
-            style: TextStyle(
+            style: const TextStyle(
               height: 1.4,
             ),
           ),

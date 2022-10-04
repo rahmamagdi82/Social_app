@@ -10,6 +10,8 @@ import '../shared/components/cubit/states.dart';
 import 'comment_page.dart';
 
 class FeedsScreen extends StatelessWidget {
+  const FeedsScreen({Key? key}) : super(key: key);
+
   @override
 
   Widget build(BuildContext context) {
@@ -233,14 +235,15 @@ class FeedsScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                //'0 comments',
                                 '${SocialCubit.get(context).commentsInPost[index]}',
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ],
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          navigation(context, CommentPage(postId: SocialCubit.get(context).postId[index],num: index,));
+                        },
                       ),
                     ),
                   ],

@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:social_app/modules/edit_profile.dart';
 import 'package:social_app/shared/components/components.dart';
-import 'package:social_app/shared/components/constans.dart';
 import 'package:social_app/shared/components/cubit/cubit.dart';
 import 'package:social_app/shared/components/cubit/states.dart';
 
@@ -13,6 +11,8 @@ import 'login/login.dart';
 
 class SettingScreen extends StatelessWidget
 {
+  const SettingScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit,SocialStates>(
@@ -33,7 +33,7 @@ class SettingScreen extends StatelessWidget
                         height: 140.0,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadiusDirectional.only(
+                          borderRadius: const BorderRadiusDirectional.only(
                             topStart: Radius.circular(4.0),
                             topEnd: Radius.circular(4.0),
                           ),
@@ -61,7 +61,7 @@ class SettingScreen extends StatelessWidget
                   ],
                 ),
               ),
-              SizedBox(height: 5.0,),
+              const SizedBox(height: 5.0,),
               Text(
                 '${user.name}',
                 style: Theme
@@ -180,15 +180,15 @@ class SettingScreen extends StatelessWidget
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {  },
-                      child: Text('Add Photos'),
+                      child: const Text('Add Photos'),
                     ),
                   ),
-                  SizedBox(width: 10.0,),
+                  const SizedBox(width: 10.0,),
                   OutlinedButton(
                     onPressed: () {
                       navigation(context, EditProfileScreen());
                     },
-                    child: Icon(
+                    child: const Icon(
                       IconlyBroken.edit,
                       size: 16.0,
                     ),
@@ -203,7 +203,6 @@ class SettingScreen extends StatelessWidget
                   function: () {
                     CashHelper.removeData(key: 'uId').then((value) {
                       if (value) {
-                        print(uId);
                         navigationAndFinish(context, Login());
                       }
                     });

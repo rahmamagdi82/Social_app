@@ -9,6 +9,8 @@ import 'package:social_app/shared/components/cubit/states.dart';
 
 class UsersScreen extends StatelessWidget
 {
+  const UsersScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit,SocialStates>(
@@ -22,7 +24,7 @@ class UsersScreen extends StatelessWidget
               itemCount: SocialCubit.get(context).users.length,
             );
           },
-          fallback: (context)=>Center(child: CircularProgressIndicator()),
+          fallback: (context)=>const Center(child: CircularProgressIndicator()),
         ),
         listener: (context,state){}
     );
@@ -47,7 +49,7 @@ class UsersScreen extends StatelessWidget
           ),
           Text(
             '${model.name}',
-            style: TextStyle(
+            style: const TextStyle(
               height: 1.4,
             ),
           ),

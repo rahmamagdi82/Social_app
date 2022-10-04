@@ -86,8 +86,7 @@ class Login extends StatelessWidget
                           validate: (value){
                             if(value!.isEmpty){
                               return 'password must be not empty';
-                            }else
-                            {
+                            }else {
                               return null;
                             }
                           },

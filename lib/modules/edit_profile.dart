@@ -5,14 +5,14 @@ import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/components/cubit/cubit.dart';
 import 'package:social_app/shared/components/cubit/states.dart';
 
-import '../shared/components/constans.dart';
-import '../shared/network/local/cash_helper.dart';
 
 class EditProfileScreen extends StatelessWidget
 {
   var nameController=TextEditingController();
   var bioController=TextEditingController();
   var phoneController=TextEditingController();
+
+  EditProfileScreen({Key? key}) : super(key: key);
 
 
   @override
@@ -51,9 +51,9 @@ class EditProfileScreen extends StatelessWidget
               child: Column(
                 children: [
                   if(state is UpdateUserLoadingState)
-                   LinearProgressIndicator(),
+                   const LinearProgressIndicator(),
                   if(state is UpdateUserLoadingState)
-                   SizedBox(height: 10.0,),
+                   const SizedBox(height: 10.0,),
                   Container(
                     height: 190.0,
                     child: Stack(
@@ -67,7 +67,7 @@ class EditProfileScreen extends StatelessWidget
                                 height: 140.0,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadiusDirectional.only(
+                                  borderRadius: const BorderRadiusDirectional.only(
                                     topStart: Radius.circular(4.0),
                                     topEnd: Radius.circular(4.0),
                                   ),
@@ -78,7 +78,7 @@ class EditProfileScreen extends StatelessWidget
                                 ),
                               ),
                               IconButton(
-                                icon:CircleAvatar(
+                                icon:const CircleAvatar(
                                   child: Icon(
                                     IconlyBroken.camera,
                                     size: 16.0,
@@ -105,7 +105,7 @@ class EditProfileScreen extends StatelessWidget
                               ),
                             ),
                             IconButton(
-                              icon:CircleAvatar(
+                              icon:const CircleAvatar(
                                 child: Icon(
                                   IconlyBroken.camera,
                                   size: 16.0,
@@ -119,7 +119,7 @@ class EditProfileScreen extends StatelessWidget
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.0,),
+                  const SizedBox(height: 20.0,),
                   if(SocialCubit.get(context).profileImage != null || SocialCubit.get(context).coverImage != null)
                    Row(
                     children: [
@@ -139,13 +139,13 @@ class EditProfileScreen extends StatelessWidget
                               uperCase: true,
                             ),
                             if(state is UpdateUserLoadingState)
-                              SizedBox(height: 5.0,),
+                              const SizedBox(height: 5.0,),
                             if(state is UpdateUserLoadingState)
-                              LinearProgressIndicator(),
+                              const LinearProgressIndicator(),
                           ],
                         ),
                       ),
-                      SizedBox(width: 5.0,),
+                      const SizedBox(width: 5.0,),
                       if( SocialCubit.get(context).coverImage != null)
                       Expanded(
                         child: Column(
@@ -162,16 +162,16 @@ class EditProfileScreen extends StatelessWidget
                               uperCase: true,
                             ),
                             if(state is UpdateUserLoadingState)
-                              SizedBox(height: 5.0,),
+                              const SizedBox(height: 5.0,),
                             if(state is UpdateUserLoadingState)
-                              LinearProgressIndicator(),
+                              const LinearProgressIndicator(),
                           ],
                         ),
                       ),
                     ],
                   ),
                   if(SocialCubit.get(context).profileImage != null || SocialCubit.get(context).coverImage != null)
-                    SizedBox(height: 20.0,),
+                    const SizedBox(height: 20.0,),
                   defultTextFormFeild(
                     validate: (value){
                       if(value!.isEmpty){
@@ -186,7 +186,7 @@ class EditProfileScreen extends StatelessWidget
                     lable: 'Name',
                     prefix: IconlyBroken.user2,
                   ),
-                  SizedBox(height: 10.0,),
+                  const SizedBox(height: 10.0,),
                   defultTextFormFeild(
                     validate: (value){
                       if(value!.isEmpty){
@@ -201,7 +201,7 @@ class EditProfileScreen extends StatelessWidget
                     lable: 'Bio',
                     prefix: IconlyBroken.infoCircle,
                   ),
-                  SizedBox(height: 10.0,),
+                  const SizedBox(height: 10.0,),
                   defultTextFormFeild(
                     validate: (value){
                       if(value!.isEmpty){
