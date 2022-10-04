@@ -10,7 +10,6 @@ import 'package:social_app/shared/styles/themes.dart';
 
 import 'layout/home.dart';
 import 'modules/login/login.dart';
-import 'modules/native_code.dart';
 import 'shared/components/cubit/states.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

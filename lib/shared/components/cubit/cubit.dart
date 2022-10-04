@@ -155,6 +155,14 @@ class SocialCubit extends Cubit<SocialStates> {
       bio: bio,
       isEmailVerified: user.isEmailVerified
     );
+    FirebaseFirestore.instance.collection('posts').where("uId",isEqualTo: uId).get().then((value) {
+      value.docs.forEach((element) {
+        element.reference.update({
+          'name':name,
+          'image':image??user.image,
+        });
+      });
+    });
     FirebaseFirestore.instance
         .collection('users')
         .doc(user.uId)
@@ -314,7 +322,6 @@ emit(UploadPostSuccessState());
               .then((value) {
             likesList[i].add(Users.fromJson(value.data()));
             emit(GetLikesSuccessState());
-            print(likesList);
           }).catchError((error) {
             print(error.toString());
             emit(GetLikesErrorState(error.toString()));
