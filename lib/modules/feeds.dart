@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:social_app/models/post_model.dart';
+import 'package:social_app/modules/likes_page.dart';
 import 'package:social_app/shared/components/cubit/cubit.dart';
 
 import '../shared/components/components.dart';
@@ -216,7 +217,9 @@ class FeedsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          navigation(context, LikesPage(num: index,));
+                        },
                       ),
                     ),
                     Expanded(

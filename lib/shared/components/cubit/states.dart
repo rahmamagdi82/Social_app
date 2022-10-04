@@ -22,6 +22,16 @@ class GetCommentsErrorState extends SocialStates
 
 class GetCommentsSuccessState extends SocialStates {}
 
+class GetLikesLoadingState extends SocialStates {}
+
+class GetLikesErrorState extends SocialStates
+{
+  final String error;
+  GetLikesErrorState(this.error);
+}
+
+class GetLikesSuccessState extends SocialStates {}
+
 class GetAllUserLoadingState extends SocialStates {}
 
 class GetAllUserErrorState extends SocialStates

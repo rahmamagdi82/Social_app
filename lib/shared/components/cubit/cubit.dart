@@ -31,6 +31,9 @@ class SocialCubit extends Cubit<SocialStates> {
     if(x==3 || x ==1){
       getAllUsers();
     }
+    if(x==0){
+      getPosts();
+    }
     if (x == 2) {
       emit(NewPostState());
     } else {
@@ -238,10 +241,10 @@ emit(UploadPostSuccessState());
     likesInPost=[];
     commentsInPost=[];
     List<QuerySnapshot> listOfComments=[];
+    List<QuerySnapshot> listOfLikes=[];
     emit(GetPostLoadingState());
     FirebaseFirestore.instance.collection('posts').get().then((value){
       value.docs.forEach((element) {
-        commentsList.add([]);
         element.reference.collection('likes').get().then((likeValue) {
               element.reference.collection('comments').get().then((commentValue){
                 postId.add(element.id);
@@ -250,6 +253,8 @@ emit(UploadPostSuccessState());
                 commentsInPost.add(commentValue.docs.length);
                 listOfComments.add(commentValue);
                 getComments(listOfComments,value.docs.length);
+                listOfLikes.add(likeValue);
+                getLikes(listOfLikes,value.docs.length);
               });
         }).catchError((error){
               print(error.toString());
@@ -260,7 +265,6 @@ emit(UploadPostSuccessState());
       print(error.toString());
       emit(GetPostErrorState(error));
     });
-    //getComments(listOfComments);
   }
 
   List<List<Map<String,dynamic>>> commentsList=[];
@@ -268,8 +272,11 @@ emit(UploadPostSuccessState());
      List<QuerySnapshot> commentValueList,
       int length,
   ) {
+    commentsList=[];
+    emit(GetCommentsLoadingState());
     if (commentValueList.length == length){
       for (int i = 0; i < commentValueList.length; i++) {
+        commentsList.add([]);
         commentValueList[i].docs.forEach((comment) {
           FirebaseFirestore.instance.collection('users').doc(comment.id)
               .get()
@@ -289,6 +296,32 @@ emit(UploadPostSuccessState());
         });
       }
   }
+  }
+
+  List<List<Users>> likesList=[];
+  void getLikes(
+      List<QuerySnapshot> likesValueList,
+      int length,
+      ) {
+    likesList=[];
+    emit(GetLikesLoadingState());
+    if (likesValueList.length == length){
+      for (int i = 0; i < likesValueList.length; i++) {
+        likesList.add([]);
+        likesValueList[i].docs.forEach((comment) {
+          FirebaseFirestore.instance.collection('users').doc(comment.id)
+              .get()
+              .then((value) {
+            likesList[i].add(Users.fromJson(value.data()));
+            emit(GetLikesSuccessState());
+            print(likesList);
+          }).catchError((error) {
+            print(error.toString());
+            emit(GetLikesErrorState(error.toString()));
+          });
+        });
+      }
+    }
   }
 
   void likePost(String postId){
