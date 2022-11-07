@@ -35,6 +35,7 @@ class NewPostScreen extends StatelessWidget {
                   }
                 }
                 textController.text='';
+                Navigator.of(context).pop();
                 SocialCubit.get(context).getPosts();
               },
               text: 'post',

@@ -12,9 +12,7 @@ import 'comment_page.dart';
 
 class FeedsScreen extends StatelessWidget {
   const FeedsScreen({Key? key}) : super(key: key);
-
   @override
-
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit,SocialStates>(
        listener: (context,state){},
@@ -144,47 +142,16 @@ class FeedsScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(
-              //     bottom: 10.0,
-              //     top: 5.0,
-              //   ),
-              //   child: Container(
-              //     width: double.infinity,
-              //     child: Wrap(
-              //       children: [
-              //         Padding(
-              //           padding: const EdgeInsetsDirectional.only(end: 6.0),
-              //           child: Container(
-              //             height: 25.0,
-              //             child: MaterialButton(
-              //               onPressed: () {},
-              //               minWidth: 1.0,
-              //               padding: EdgeInsets.zero,
-              //               child: Text(
-              //                 '#Software',
-              //                 style:
-              //                     Theme.of(context).textTheme.caption!.copyWith(
-              //                           color: Colors.blue,
-              //                         ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               if(model.postImage != '')
                Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Container(
                   width: double.infinity,
-                  height: 140.0,
+                  height: 150.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.0),
                     image:  DecorationImage(
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       image: NetworkImage(
                         '${model.postImage}',
                       ),
@@ -211,14 +178,14 @@ class FeedsScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                              Text(
-                                '${SocialCubit.get(context).likesInPost[index]}',
+                               '${SocialCubit.get(context).posts[index].likesList.length}',
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ],
                           ),
                         ),
                         onTap: () {
-                          navigation(context, LikesPage(num: index,));
+                          navigation(context, LikesPage(list: SocialCubit.get(context).posts[index].likesList,));
                         },
                       ),
                     ),
@@ -238,14 +205,14 @@ class FeedsScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                '${SocialCubit.get(context).commentsInPost[index]}',
+                                '${SocialCubit.get(context).posts[index].list.length}',
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ],
                           ),
                         ),
                         onTap: () {
-                          navigation(context, CommentPage(postId: SocialCubit.get(context).postId[index],num: index,));
+                          navigation(context, CommentPage(postId: SocialCubit.get(context).postId[index],list: SocialCubit.get(context).posts[index].list,));
                         },
                       ),
                     ),
@@ -265,7 +232,7 @@ class FeedsScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        navigation(context, CommentPage(postId: SocialCubit.get(context).postId[index],num: index,));
+                        navigation(context, CommentPage(postId: SocialCubit.get(context).postId[index],list: SocialCubit.get(context).posts[index].list,));
                       },
                       child: Row(
                         children: [
@@ -309,7 +276,7 @@ class FeedsScreen extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      SocialCubit.get(context).likePost(SocialCubit.get(context).postId[index]);
+                      SocialCubit.get(context).likePost(SocialCubit.get(context).postId[index],SocialCubit.get(context).posts[index].likesList);
                     },
                   ),
                 ],

@@ -241,119 +241,73 @@ emit(UploadPostSuccessState());
 
   List<PostModel> posts=[];
   List<String> postId=[];
-  List<int> likesInPost=[];
-  List<int> commentsInPost=[];
-  void getPosts(){
+   void getPosts(){
     posts=[];
     postId=[];
-    likesInPost=[];
-    commentsInPost=[];
-    List<QuerySnapshot> listOfComments=[];
-    List<QuerySnapshot> listOfLikes=[];
     emit(GetPostLoadingState());
     FirebaseFirestore.instance.collection('posts').get().then((value){
       value.docs.forEach((element) {
-        element.reference.collection('likes').get().then((likeValue) {
-              element.reference.collection('comments').get().then((commentValue){
-                postId.add(element.id);
-                posts.add(PostModel.fromJson(element.data()));
-                likesInPost.add(likeValue.docs.length);
-                commentsInPost.add(commentValue.docs.length);
-                listOfComments.add(commentValue);
-                getComments(listOfComments,value.docs.length);
-                listOfLikes.add(likeValue);
-                getLikes(listOfLikes,value.docs.length);
-              });
-        }).catchError((error){
-              print(error.toString());
-            });
-        emit(GetPostSuccessState());
+          posts.add(PostModel.fromJson(element.data()));
+          postId.add(element.id);
+          emit(GetPostSuccessState());
       });
     }).catchError((error){
       print(error.toString());
-      emit(GetPostErrorState(error));
+      emit(GetPostErrorState(error.toString()));
     });
-  }
+   }
 
-  List<List<Map<String,dynamic>>> commentsList=[];
-  void getComments(
-     List<QuerySnapshot> commentValueList,
-      int length,
-  ) {
-    commentsList=[];
-    emit(GetCommentsLoadingState());
-    if (commentValueList.length == length){
-      for (int i = 0; i < commentValueList.length; i++) {
-        commentsList.add([]);
-        commentValueList[i].docs.forEach((comment) {
-          FirebaseFirestore.instance.collection('users').doc(comment.id)
-              .get()
-              .then((value) {
-            commentsList[i].add({
-              'comment': comment.get('comment'),
-              'user': {
-                'name': value.get('name'),
-                'image': value.get('image')
-              },
-            });
-            emit(GetCommentsSuccessState());
-          }).catchError((error) {
-            print(error.toString());
-            emit(GetCommentsErrorState(error.toString()));
-          });
-        });
+  List likes=[];
+   bool check=false;
+  void likePost(String postId,List<LikeModel> list){
+    likes=[];
+      LikeModel likeModel= LikeModel(
+      like:true,
+      image:user.image,
+      name:user.name,
+    );
+    list.forEach((element) {
+      if(element.name == user.name){
+        check=true;
       }
-  }
-  }
-
-  List<List<Users>> likesList=[];
-  void getLikes(
-      List<QuerySnapshot> likesValueList,
-      int length,
-      ) {
-    likesList=[];
-    emit(GetLikesLoadingState());
-    if (likesValueList.length == length){
-      for (int i = 0; i < likesValueList.length; i++) {
-        likesList.add([]);
-        likesValueList[i].docs.forEach((comment) {
-          FirebaseFirestore.instance.collection('users').doc(comment.id)
-              .get()
-              .then((value) {
-            likesList[i].add(Users.fromJson(value.data()));
-            emit(GetLikesSuccessState());
-          }).catchError((error) {
-            print(error.toString());
-            emit(GetLikesErrorState(error.toString()));
-          });
-        });
-      }
+    });
+    if(!check){
+      list.add(likeModel);
+      list.forEach((element) {
+        likes.add(element.toMap());
+      });
+    }else{
+      list.forEach((element) {
+        likes.add(element.toMap());
+      });
     }
-  }
-
-  void likePost(String postId){
     FirebaseFirestore
         .instance
         .collection('posts')
         .doc(postId)
-        .collection('likes')
-        .doc(user.uId)
-        .set({'like':true}).then((value) {
+        .update({'likes':likes}).then((value) {
           emit(LikePostSuccessState());
-          getPosts();
         }).catchError((error){
       emit(LikePostErrorState(error.toString()));
     });
   }
 
-  void commentPost(String postId,String text){
+  List comments=[];
+  void commentPost(String postId,List<CommentModel> list,String text){
+    CommentModel comment= CommentModel(
+      comment:text,
+      image:user.image,
+      name:user.name,
+    );
+    list.add(comment);
+    list.forEach((element) {
+      comments.add(element.toMap());
+    });
     FirebaseFirestore
         .instance
         .collection('posts')
         .doc(postId)
-        .collection('comments')
-        .doc(user.uId)
-        .set({'comment':text}).then((value) {
+        .update({'comments':comments}).then((value) {
       emit(CommentPostSuccessState());
     }).catchError((error){
       emit(CommentPostErrorState(error.toString()));

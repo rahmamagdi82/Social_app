@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/shared/components/components.dart';
 
 import '../shared/components/cubit/cubit.dart';
@@ -11,9 +12,9 @@ class CommentPage extends StatelessWidget
 {
   var commentController=TextEditingController();
   String postId;
-  int num;
+  List<CommentModel> list;
 
-  CommentPage({Key? key,required this.postId,required this.num}) : super(key: key);
+  CommentPage({Key? key,required this.postId,required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +30,10 @@ class CommentPage extends StatelessWidget
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context,index){
-                      print(SocialCubit.get(context).commentsList[num][0]);
-                      return buildComment(context,SocialCubit.get(context).commentsList[num][index]);
+                      return buildComment(context,list[index]);
                     },
                     separatorBuilder: (context,index)=>const SizedBox(height: 15.0,),
-                    itemCount:SocialCubit.get(context).commentsList[num].length,
+                    itemCount:list.length,
                   ),
                 ),
                 Row(
@@ -52,10 +52,9 @@ class CommentPage extends StatelessWidget
                     MaterialButton(
                       onPressed: (){
                         if(commentController.text.isNotEmpty) {
-                          SocialCubit.get(context).commentPost(postId, commentController.text);
+                          SocialCubit.get(context).commentPost(postId, list,commentController.text);
                         }
                         commentController.text='';
-                        SocialCubit.get(context).getPosts();
                       },
                       minWidth: 1.0,
                       child: const Icon(
@@ -74,11 +73,11 @@ class CommentPage extends StatelessWidget
     );
   }
 
-  Widget buildComment(context,Map<String,dynamic> comment)=>Container(
+  Widget buildComment(context,CommentModel comment)=>Container(
     child:Row(
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage('${comment['user']['image']}'),
+          backgroundImage: NetworkImage('${comment.image}'),
           radius: 25.0,
         ),
         const SizedBox(
@@ -89,7 +88,7 @@ class CommentPage extends StatelessWidget
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${comment['user']['name']}',
+                '${comment.name}',
                 style: const TextStyle(
                   fontWeight:FontWeight.w800,
                   fontSize: 16.0,
@@ -97,7 +96,7 @@ class CommentPage extends StatelessWidget
                 ),
               ),
               Text(
-                '${comment['comment']}',
+                '${comment.comment}',
                 style: const TextStyle(
                   fontSize: 13.0,
                   fontWeight:FontWeight.w300,

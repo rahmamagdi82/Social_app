@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/shared/components/components.dart';
 
-import '../models/users_model.dart';
 import '../shared/components/cubit/cubit.dart';
 import '../shared/components/cubit/states.dart';
 
 class LikesPage extends StatelessWidget
 {
-  int num;
-  LikesPage({Key? key,required this.num}) : super(key: key);
+  List<LikeModel> list;
+  LikesPage({Key? key,required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +25,10 @@ class LikesPage extends StatelessWidget
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context,index){
-                      return buildComment(context,SocialCubit.get(context).likesList[num][index]);
+                      return buildLike(context,list[index]);
                     },
                     separatorBuilder: (context,index)=>const SizedBox(height: 15.0,),
-                    itemCount:SocialCubit.get(context).likesList[num].length,
+                    itemCount:list.length,
                   ),
                 ),
               ],
@@ -39,11 +39,11 @@ class LikesPage extends StatelessWidget
     );
   }
 
-  Widget buildComment(context,Users user)=>Container(
+  Widget buildLike(context,LikeModel model)=>Container(
     child:Row(
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage('${user.image}'),
+          backgroundImage: NetworkImage('${model.image}'),
           radius: 25.0,
         ),
         const SizedBox(
@@ -51,7 +51,7 @@ class LikesPage extends StatelessWidget
         ),
         Expanded(
           child: Text(
-            '${user.name}',
+            '${model.name}',
             style: const TextStyle(
               fontWeight:FontWeight.w800,
               fontSize: 16.0,
